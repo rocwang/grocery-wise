@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "event-propagation-path": "^1.0.5",
+    "lodash-es": "^4.17.13",
     "vue": "^2.6.10"
   },
   "devDependencies": {

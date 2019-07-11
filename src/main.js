@@ -1,3 +1,6 @@
+import "./assets/reset.css";
+import "./assets/global.module.css";
+
 import Vue from "vue";
 import App from "./App.vue";
 
