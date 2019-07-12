@@ -30,7 +30,7 @@ export default {
     }
   },
   data() {
-    const placeholder = "apple\nbanana\norange\ncoke\ncereal";
+    const placeholder = "apple\nbanana\norange\ncoke 1.5l\nweet-bix";
 
     return {
       rawShoppingList: placeholder,

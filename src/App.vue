@@ -5,7 +5,7 @@
       :class="$style.shoppingList"
       :isLoading="isLoading"
     />
-    <Comparison :comparison="comparison" :class="$style.comparison" />
+    <Comparison :class="$style.comparison" :shoppingList="shoppingList" />
   </div>
 </template>
 
@@ -18,40 +18,13 @@ export default {
   components: { ShoppingList, Comparison },
   data() {
     return {
-      comparison: [],
-      isLoading: false
+      isLoading: false,
+      shoppingList: []
     };
   },
   methods: {
     compare(shoppingList) {
-      this.comparison = [];
-      this.isLoading = true;
-      const items = shoppingList.map(async query => {
-        try {
-          const result = await fetch(
-            `${process.env.VUE_APP_PRICE_API}?q=${encodeURIComponent(query)}`
-          );
-          const jsonResult = await result.json();
-
-          return {
-            name: query,
-            stores: jsonResult
-          };
-        } catch (e) {
-          // todo: notify the user about the error
-          console.log(e);
-          return null;
-        }
-      });
-
-      items.forEach(async itemPromise => {
-        const item = await itemPromise;
-        if (item) {
-          this.comparison.push(item);
-        }
-      });
-
-      Promise.all(items).finally(() => (this.isLoading = false));
+      this.shoppingList = shoppingList;
     }
   }
 };
@@ -64,6 +37,8 @@ export default {
     "shoppingList comparison" auto
     / 300px 1fr;
   grid-gap: 20px;
+  justify-items: stretch;
+  align-items: start;
 }
 
 .shoppingList {

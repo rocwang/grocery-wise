@@ -1,22 +1,19 @@
 <template>
   <Modal @close="close">
     <div :class="$style.root">
-      <h2 :class="$style.name">{{ row.name }}</h2>
+      <h2 :class="$style.query">{{ query }}</h2>
 
-      <template v-for="(store, key) in row.stores">
-        <p :class="$style.storeName" :key="`${key}-name`">
-          {{ key | storeName }}
+      <template v-for="(store, key) in stores">
+        <p :class="$style.storeName" :key="`storeName-${key}`">
+          {{ store.name | storeName }}
         </p>
-        <ul :class="$style.list" :key="`${key}}-list`">
-          <li v-for="item in store" :key="item.url" :class="$style.item">
-            <img :src="item.image" :alt="item.name" :class="$style.image" />
-            <p>{{ item.name }}</p>
-            <p>
-              {{ item.price | money }}
-              {{ item.unit }}
-            </p>
-          </li>
-        </ul>
+
+        <Spinner
+          :items="store.products"
+          :key="`spinner-${key}`"
+          :class="$style.spinner"
+          v-model="newValue[key]"
+        />
       </template>
     </div>
   </Modal>
@@ -24,38 +21,40 @@
 
 <script>
 import Modal from "./Modal";
+import Spinner from "./Spinner";
+import { storeName } from "../filters";
+import { cloneDeep } from "lodash-es";
 
 export default {
   name: "ModalManualMatch",
-  components: { Modal },
+  components: { Modal, Spinner },
   props: {
-    row: {
-      type: Object,
+    query: {
+      type: String,
+      required: true
+    },
+    stores: {
+      type: Array,
+      required: true
+    },
+    value: {
+      type: Array,
       required: true
     }
   },
+  data() {
+    return {
+      newValue: cloneDeep(this.value)
+    };
+  },
   methods: {
     close() {
-      this.$emit("close", this.row);
+      this.$emit("input", this.newValue);
+      this.$emit("close");
     }
   },
   filters: {
-    money(value) {
-      return new Intl.NumberFormat("en-NZ", {
-        style: "currency",
-        currency: "NZD",
-        minimumFractionDigits: 2
-      }).format(value);
-    },
-    storeName(value) {
-      const map = {
-        countdown: "Countdown",
-        newWorld: "New World",
-        pakNSave: "Pak'nSave"
-      };
-
-      return map[value] || value;
-    }
+    storeName
   }
 };
 </script>
@@ -64,16 +63,18 @@ export default {
 .root {
   display: grid;
   grid-template:
-    "name name name" auto
+    "query query query" auto
     "storeName1 storeName2 storeName3" auto
-    "column1 column2 column3" 1fr
+    "spinner1 spinner2 spinner3" minmax(0, 1fr)
     / 1fr 1fr 1fr;
   height: 100%;
 }
 
-.name {
-  grid-area: name;
+.query {
+  grid-area: query;
   text-align: center;
+  font-weight: bold;
+  line-height: 2;
 }
 
 .storeName {
@@ -92,33 +93,15 @@ export default {
   grid-area: storeName3;
 }
 
-.list {
-  overflow: auto;
-  scroll-snap-type: y mandatory;
+.spinner:nth-of-type(1) {
+  grid-area: spinner1;
 }
 
-.list:nth-of-type(1) {
-  grid-area: column1;
+.spinner:nth-of-type(2) {
+  grid-area: spinner2;
 }
 
-.list:nth-of-type(2) {
-  grid-area: column2;
-}
-
-.list:nth-of-type(3) {
-  grid-area: column3;
-}
-
-.item {
-  scroll-snap-align: start;
-  border: 1px solid #000;
-  padding: 20px;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.image {
-  margin-left: auto;
-  margin-right: auto;
+.spinner:nth-of-type(3) {
+  grid-area: spinner3;
 }
 </style>

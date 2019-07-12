@@ -25,6 +25,13 @@ export default {
         this.$emit("close");
       }
     }
+  },
+  created() {
+    this.originalOverflow = document.querySelector("body").style.overflow;
+    document.querySelector("body").style.overflow = "hidden";
+  },
+  destroyed() {
+    document.querySelector("body").style.overflow = this.originalOverflow;
   }
 };
 </script>
