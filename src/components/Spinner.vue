@@ -1,12 +1,7 @@
 <template>
   <div :class="$style.root">
     <ul :class="$style.list" ref="list">
-      <li
-        v-for="item in items"
-        :key="item.url"
-        :class="$style.item"
-        ref="items"
-      >
+      <li v-for="item in items" :key="item.url" :class="$style.item">
         <img :src="item.image" :alt="item.name" :class="$style.image" />
         <p :class="$style.productName">{{ item.name }}</p>
         <p :class="$style.price">
@@ -37,56 +32,24 @@ export default {
     money
   },
   mounted() {
-    this.observer = new IntersectionObserver(this.handleIntersection, {
-      root: this.$refs.list,
-      rootMargin: "0px",
-      threshold: 0.5
+    this.$refs.list.addEventListener("scroll", this.handleScroll, {
+      passive: true
     });
-    this.$refs.items.forEach(item => this.observer.observe(item));
-    this.visibleItemIndices = new Set();
 
     // Set scroll top
     this.$refs.list.scrollTop =
       (this.$refs.list.scrollHeight / (this.items.length + 4)) * this.value;
   },
-  destroyed() {
-    this.observer.disconnect();
+  beforeDestroy() {
+    this.$refs.list.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    handleIntersection(entries) {
-      entries.forEach(entry => {
-        const index = this.$refs.items.indexOf(entry.target);
-        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          this.visibleItemIndices.add(index);
-        } else {
-          this.visibleItemIndices.delete(index);
-        }
-      });
+    handleScroll(e) {
+      const scrollTop = e.target.scrollTop;
+      const itemHeight = e.target.clientHeight / 5;
+      const itemIndex = Math.floor(scrollTop / itemHeight);
 
-      const indices = Array.from(this.visibleItemIndices.values()).sort(
-        (a, b) => a - b
-      );
-      switch (indices.length) {
-        case 3:
-          if (indices[0] === 0) {
-            this.$emit("input", indices[0]);
-          } else {
-            this.$emit("input", indices[2]);
-          }
-          break;
-        case 4:
-          if (indices[0] === 0) {
-            this.$emit("input", indices[1]);
-          } else {
-            this.$emit("input", indices[2]);
-          }
-          break;
-        case 5:
-          this.$emit("input", indices[2]);
-          break;
-        default:
-          this.$emit("input", indices[Math.ceil(indices.length / 2)]);
-      }
+      this.$emit("input", itemIndex);
     }
   }
 };
