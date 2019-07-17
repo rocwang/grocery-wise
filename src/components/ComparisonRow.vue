@@ -33,6 +33,7 @@
 <script>
 import ModalManualMatch from "./ModalManualMatch";
 import { money, storeName } from "../filters";
+import { search } from "../search";
 
 export default {
   name: "ComparisonRow",
@@ -66,10 +67,7 @@ export default {
       immediate: true,
       async handler(query) {
         try {
-          const result = await fetch(
-            `${process.env.VUE_APP_PRICE_API}?q=${encodeURIComponent(query)}`
-          );
-          this.stores = await result.json();
+          this.stores = await search(query);
         } catch (e) {
           // todo: notify the user about the error
           console.log(e);
