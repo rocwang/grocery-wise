@@ -45,7 +45,8 @@ export default {
   },
   methods: {
     handleScroll(e) {
-      const scrollTop = e.target.scrollTop;
+      // Have 5 pixel offset to make sure we can land on the correct item
+      const scrollTop = e.target.scrollTop + 5;
       const itemHeight = e.target.clientHeight / 5;
       const itemIndex = Math.floor(scrollTop / itemHeight);
 
