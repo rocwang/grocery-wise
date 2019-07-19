@@ -1,105 +1,81 @@
-import jquery from "jquery";
+import jquery from "jquery/dist/jquery.slim.js";
 
-async function searchCountDown(query) {
+export async function searchCountDown(query, key) {
   const response = await fetch(
     `${
       process.env.VUE_APP_COUNTDOWN_PROXY
-    }/shop/searchproducts?search=${encodeURIComponent(query)}`
+    }/shop/searchproducts?search=${encodeURIComponent(query)}&_=${key}`,
+    {
+      credentials: "include"
+    }
   );
   const html = await response.text();
-  const items = jquery(html).find(".gridProductStamp");
-  const result = [];
-  items.each(function() {
-    const $item = jquery(this);
 
-    result.push({
-      id: $item.data("datalayer-id"),
-      name: $item
-        .find(".gridProductStamp-name")
-        .text()
-        .trim(),
-      image:
-        process.env.VUE_APP_COUNTDOWN_IMAGE_BASE +
-        $item.find(".gridProductStamp-image").attr("src"),
-      price: Number($item.data("datalayer-price")),
-      unit: $item.find(".trolleyControls").data("unit")
-    });
-  });
+  const ownerDoc = document.implementation.createHTMLDocument("virtual");
+  return jquery(html, ownerDoc)
+    .find(".gridProductStamp")
+    .map(function() {
+      const $item = jquery(this);
 
-  return result;
+      return {
+        id: $item.data("datalayer-id"),
+        name: $item
+          .find(".gridProductStamp-name")
+          .text()
+          .trim(),
+        image:
+          process.env.VUE_APP_COUNTDOWN_IMAGE_BASE +
+          $item.find(".gridProductStamp-image").attr("src"),
+        price: Number($item.data("datalayer-price")),
+        unit: $item.find(".trolleyControls").data("unit")
+      };
+    })
+    .toArray();
 }
 
-function searchPakNSave(query) {
+export function searchPakNSave(query, key) {
   return searchFoodStuffs(
     `${process.env.VUE_APP_PAKNSAVE_PROXY}/Search?q=${encodeURIComponent(
       query
-    )}`
+    )}&_=${key}`
   );
 }
 
-function searchNewWorld(query) {
+export function searchNewWorld(query, key) {
   return searchFoodStuffs(
     `${process.env.VUE_APP_NEWWORLD_PROXY}/Search?q=${encodeURIComponent(
       query
-    )}`
+    )}&_=${key}`
   );
 }
 
 async function searchFoodStuffs(url) {
-  const response = await fetch(url);
-  const html = await response.text();
-  const items = jquery(html).find(".fs-product-card");
-  const result = [];
-  items.each(function() {
-    const $item = jquery(this);
-    const product = $item.find(".js-product-card-footer").data("options");
-
-    result.push({
-      id: product.productId,
-      name: $item
-        .find(".fs-product-card__description")
-        .text()
-        .replace(/[\r\n]+/g, " ")
-        .trim(),
-      image: $item
-        .find(".fs-product-card__product-image")
-        .css("background-image")
-        .replace(/^url\("|"\)$/g, ""),
-      price: Number(product.ProductDetails.PricePerItem),
-      unit: product.ProductDetails.PriceMode
-    });
+  const response = await fetch(url, {
+    credentials: "include"
   });
+  const html = await response.text();
 
-  return result;
-}
+  const ownerDoc = document.implementation.createHTMLDocument("virtual");
+  return jquery(html, ownerDoc)
+    .find(".fs-product-card")
+    .map(function() {
+      const $item = jquery(this);
+      const product = $item.find(".js-product-card-footer").data("options");
 
-export async function search(query) {
-  let result = null;
-
-  try {
-    const searchResults = await Promise.all([
-      searchCountDown(query),
-      searchNewWorld(query),
-      searchPakNSave(query)
-    ]);
-
-    result = [
-      {
-        name: "Countdown",
-        products: searchResults[0]
-      },
-      {
-        name: "New World",
-        products: searchResults[1]
-      },
-      {
-        name: "Pak'nSave",
-        products: searchResults[2]
-      }
-    ];
-  } catch (e) {
-    result = e.toString();
-  }
-
-  return result;
+      return {
+        id: product.productId,
+        name: $item
+          .find(".fs-product-card__description")
+          .text()
+          .replace(/[\r\n]+/g, " ")
+          .trim(),
+        image: $item
+          .find(".fs-product-card__product-image")
+          .css("background-image")
+          .replace(/^url\("|"\)$/g, ""),
+        price: Number(product.ProductDetails.PricePerItem),
+        unit: product.ProductDetails.PriceMode
+      };
+    })
+    .toArray();
 }

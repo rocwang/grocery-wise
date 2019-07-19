@@ -12,7 +12,9 @@
     "event-propagation-path": "^1.0.5",
     "jquery": "^3.4.1",
     "lodash-es": "^4.17.14",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-multiselect": "^2.1.6",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.2",

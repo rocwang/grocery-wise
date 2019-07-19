@@ -2,11 +2,32 @@
   <table :class="$style.root">
     <thead>
       <tr>
-        <th :class="$style.name">Name</th>
-        <th :class="$style.store">Countdown</th>
-        <th :class="$style.store">New World</th>
-        <th :class="$style.store">Pak'nSave</th>
-        <th :class="$style.action">Action</th>
+        <th>Name</th>
+        <th>Countdown</th>
+        <th>New World</th>
+        <th>Pak'nSave</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <th>Store</th>
+        <th>
+          <StoreSelectCountdown
+            @input="setStoreId({ key: 'countdown', value: $event })"
+          />
+        </th>
+        <th>
+          <StoreSelectFoodstuffs
+            @input="setStoreId({ key: 'newworld', value: $event })"
+            brand="newworld"
+          />
+        </th>
+        <th>
+          <StoreSelectFoodstuffs
+            @input="setStoreId({ key: 'paknsave', value: $event })"
+            brand="paknsave"
+          />
+        </th>
+        <th />
       </tr>
     </thead>
     <tbody>
@@ -15,6 +36,7 @@
         :key="`${index}-${query}`"
         :query="query"
         @priceChange="handlePriceChange(index, $event)"
+        :storeIds="storeIds"
       />
     </tbody>
     <tfoot>
@@ -31,11 +53,14 @@
 
 <script>
 import ComparisonRow from "./ComparisonRow";
+import StoreSelectCountdown from "./StoreSelectCountdown";
+import StoreSelectFoodstuffs from "./StoreSelectFoodstuffs";
 import { money } from "../filters";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "Comparison",
-  components: { ComparisonRow },
+  components: { ComparisonRow, StoreSelectCountdown, StoreSelectFoodstuffs },
   props: {
     shoppingList: {
       type: Array,
@@ -52,9 +77,11 @@ export default {
       return [0, 1, 2].map(storeIndex =>
         this.prices[storeIndex].reduce((sum, price) => sum + price, 0)
       );
-    }
+    },
+    ...mapState(["storeIds"])
   },
   methods: {
+    ...mapMutations(["setStoreId"]),
     handlePriceChange(productIndex, pricesByStore) {
       pricesByStore.forEach((price, storeIndex) => {
         this.$set(this.prices[storeIndex], productIndex, price);
@@ -73,10 +100,12 @@ export default {
 </script>
 
 <style module>
+.root {
+  table-layout: fixed;
+}
+
 .root thead th,
 .root tfoot td {
-  position: sticky;
-
   font-weight: bold;
   background: lightgray;
   border: 1px solid #000;
@@ -85,11 +114,29 @@ export default {
   line-height: 1.2;
 }
 
-.root thead th {
+.root th:nth-child(1) {
+  width: 11%;
+}
+
+.root th:nth-child(2),
+.root th:nth-child(3),
+.root th:nth-child(4) {
+  width: 26%;
+}
+
+.root th:nth-child(5) {
+  width: 11%;
+}
+
+.root thead tr:first-child th {
+  position: sticky;
   top: 0;
+  z-index: 20;
 }
 
 .root tfoot td {
+  position: sticky;
   bottom: 0;
+  z-index: 10;
 }
 </style>

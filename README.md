@@ -14,7 +14,10 @@ World and Pak'nSave in New Zealand.
 
 ## Required Environment Variables
 
-* VUE_APP_PRICE_API
+* VUE_APP_COUNTDOWN_PROXY
+* VUE_APP_COUNTDOWN_IMAGE_BASE
+* VUE_APP_NEWWORLD_PROXY
+* VUE_APP_PAKNSAVE_PROXY
 
 For local development, copy `.env.template` as `.env.local`
 and adjust the environment variable values there.

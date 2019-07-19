@@ -1,3 +1,6 @@
+const os = require("os");
+const fs = require("fs");
+
 module.exports = {
   configureWebpack: {
     // Turn off various NodeJS environment polyfills Webpack adds to bundles.
@@ -16,7 +19,23 @@ module.exports = {
       Buffer: false,
       // Never embed a setImmediate implementation:
       setImmediate: false
+    },
+    resolve: {
+      extensions: [".js"],
+      alias: {
+        jquery: "jquery/dist/jquery.slim.js"
+      }
     }
   },
-  productionSourceMap: false
+  productionSourceMap: false,
+  devServer: {
+    host: "localhost",
+    https:
+      process.env.NODE_ENV === "development"
+        ? {
+            key: fs.readFileSync(os.homedir() + "/.localhost_ssl/server.key"),
+            cert: fs.readFileSync(os.homedir() + "/.localhost_ssl/server.crt")
+          }
+        : false
+  }
 };

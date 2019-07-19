@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="$style.root">
     <ShoppingList
-      @compare="compare"
+      @compare="setShoppingList"
       :class="$style.shoppingList"
       :isLoading="isLoading"
     />
@@ -12,20 +12,21 @@
 <script>
 import ShoppingList from "./components/ShoppingList";
 import Comparison from "./components/Comparison";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "app",
   components: { ShoppingList, Comparison },
   data() {
     return {
-      isLoading: false,
-      shoppingList: []
+      isLoading: false
     };
   },
+  computed: {
+    ...mapState(["shoppingList"])
+  },
   methods: {
-    compare(shoppingList) {
-      this.shoppingList = shoppingList;
-    }
+    ...mapMutations(["setShoppingList"])
   }
 };
 </script>
