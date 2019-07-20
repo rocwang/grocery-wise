@@ -1,5 +1,6 @@
 <template>
   <Multiselect
+    v-bind="$attrs"
     v-model="selected"
     @select="handleSelect"
     :options="stores"
@@ -14,6 +15,7 @@ import Multiselect from "vue-multiselect";
 
 export default {
   name: "StoreSelectFoodstuffs",
+  inheritAttrs: false,
   components: { Multiselect },
   props: {
     brand: {

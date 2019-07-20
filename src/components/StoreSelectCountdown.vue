@@ -1,5 +1,6 @@
 <template>
   <Multiselect
+    v-bind="$attrs"
     v-model="selected"
     @select="handleSelect"
     :options="stores"
@@ -15,6 +16,7 @@ import jquery from "jquery/dist/jquery.slim.js";
 
 export default {
   name: "StoreSelectCountdown",
+  inheritAttrs: false,
   components: { Multiselect },
   data() {
     return {

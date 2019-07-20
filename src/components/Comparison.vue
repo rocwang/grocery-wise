@@ -8,27 +8,6 @@
         <th>Pak'nSave</th>
         <th>Action</th>
       </tr>
-      <tr>
-        <th>Store</th>
-        <th>
-          <StoreSelectCountdown
-            @input="setStoreId({ key: 'countdown', value: $event })"
-          />
-        </th>
-        <th>
-          <StoreSelectFoodstuffs
-            @input="setStoreId({ key: 'newworld', value: $event })"
-            brand="newworld"
-          />
-        </th>
-        <th>
-          <StoreSelectFoodstuffs
-            @input="setStoreId({ key: 'paknsave', value: $event })"
-            brand="paknsave"
-          />
-        </th>
-        <th />
-      </tr>
     </thead>
     <tbody>
       <ComparisonRow
@@ -53,14 +32,12 @@
 
 <script>
 import ComparisonRow from "./ComparisonRow";
-import StoreSelectCountdown from "./StoreSelectCountdown";
-import StoreSelectFoodstuffs from "./StoreSelectFoodstuffs";
 import { money } from "../filters";
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "Comparison",
-  components: { ComparisonRow, StoreSelectCountdown, StoreSelectFoodstuffs },
+  components: { ComparisonRow },
   props: {
     shoppingList: {
       type: Array,
@@ -81,7 +58,6 @@ export default {
     ...mapState(["storeIds"])
   },
   methods: {
-    ...mapMutations(["setStoreId"]),
     handlePriceChange(productIndex, pricesByStore) {
       pricesByStore.forEach((price, storeIndex) => {
         this.$set(this.prices[storeIndex], productIndex, price);
@@ -128,7 +104,7 @@ export default {
   width: 11%;
 }
 
-.root thead tr:first-child th {
+.root thead th {
   position: sticky;
   top: 0;
   z-index: 20;
