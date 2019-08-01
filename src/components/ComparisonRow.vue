@@ -104,7 +104,8 @@ export default {
           ];
         } catch (e) {
           // todo: notify the user about the error
-          console.log(e);
+          // eslint-disable-next-line no-console
+          console.error(e);
           this.stores = null;
         }
       }
