@@ -1,0 +1,114 @@
+# Cache .npm instead of node_modules because the later one will be automatically removed by `npm ci`
+# https://docs.npmjs.com/cli/ci.html
+# https://docs.npmjs.com/cli/cache
+
+stages:
+  - build
+  #- test
+  - staging
+  - deploy
+
+before_script:
+  - export CYPRESS_CACHE_FOLDER=${CI_PROJECT_DIR}/.cypress
+  - npm config set cache ${CI_PROJECT_DIR}/.npm
+  - npm ci --prefer-offline
+
+build:
+  image: node:12
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${CI_PROJECT_DIR}/.npm/
+      - ${CI_PROJECT_DIR}/.cypress/
+  tags:
+    - docker
+  script:
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+unit test:
+  image: node:12
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${CI_PROJECT_DIR}/.npm/
+      - ${CI_PROJECT_DIR}/.cypress/
+    policy: pull
+  tags:
+    - docker
+  script:
+    - npm run test:unit -- --coverage
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - coverage
+
+e2e test:
+  image: cypress/browsers:node12.6.0-chrome75
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${CI_PROJECT_DIR}/.npm/
+      - ${CI_PROJECT_DIR}/.cypress/
+    policy: pull
+  tags:
+    - docker
+  script:
+    - npm run test:e2e -- --headless --browser chrome
+
+lighthouse:
+  image: cypress/browsers:node12.6.0-chrome75
+  stage: staging
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${CI_PROJECT_DIR}/.npm/
+      - ${CI_PROJECT_DIR}/.cypress/
+    policy: pull
+  tags:
+    - docker
+  script:
+    - 'npx netlify deploy
+      --dir=dist
+      --message="#${CI_COMMIT_SHORT_SHA} on ${CI_COMMIT_REF_NAME}: ${CI_COMMIT_TITLE}"
+      | tee netlify-deploy.log'
+    - mkdir -p lighthouse
+    - npx lighthouse $(grep "Live Draft URL" netlify-deploy.log | grep -o 'https://.*\.netlify\.com')
+      --budget-path=./tests/budgets/home.json
+      --output json html
+      --output-path ./lighthouse/audit
+      --emulated-form-factor=mobile
+      --throttling-method=provided
+      --chrome-flags="--headless --no-sandbox"
+    - node ./tests/budgets/check-lighthouse-report.js ./lighthouse/audit.report.json
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - lighthouse
+    when: always
+
+deploy:
+  image: node:12
+  stage: deploy
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${CI_PROJECT_DIR}/.npm/
+      - ${CI_PROJECT_DIR}/.cypress/
+    policy: pull
+  tags:
+    - docker
+  script:
+    - 'npx netlify deploy
+      --dir=dist
+      --prod
+      --message="#${CI_COMMIT_SHORT_SHA} on ${CI_COMMIT_REF_NAME}:
+      ${CI_COMMIT_TITLE}"'
+  only:
+    - master

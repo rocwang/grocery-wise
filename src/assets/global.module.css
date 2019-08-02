@@ -1,3 +1,26 @@
+@value colorBlue: #00a3da;
+
+@value colorBlack: #000;
+@value colorGrayA: #333;
+@value colorGrayB: #666;
+@value colorGrayC: #999;
+@value colorGrayD: #ccc;
+@value colorWhite: #FFF;
+
 :root {
+  --c-ocean-blue: colorOceanBlue;
+  --c-green: colorGreen;
+  --c-blue: colorBlue;
+  --c-yellow: colorYellow;
+  --c-red: colorRed;
+  --c-orange: colorOrange;
+
+  --c-white: colorWhite;
+  --c-gray-a: colorGrayA;
+  --c-gray-b: colorGrayB;
+  --c-gray-c: colorGrayC;
+  --c-gray-d: colorGrayD;
+  --c-black: colorBlack;
+
   font-variant-numeric: tabular-nums;
 }

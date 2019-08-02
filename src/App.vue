@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="$style.root">
+    <UpdateNotification />
     <ShoppingList
       :class="$style.shoppingList"
       :isLoading="isLoading"
@@ -23,12 +24,13 @@
 import StoreTable from "./components/StoreTable";
 import ShoppingList from "./components/ShoppingList";
 import Comparison from "./components/Comparison";
+import UpdateNotification from "./components/UpdateNotification";
 import { mapState, mapMutations } from "vuex";
 import { SET_SHOPPING_LIST, SET_STORE_ID } from "./store";
 
 export default {
   name: "app",
-  components: { ShoppingList, Comparison, StoreTable },
+  components: { ShoppingList, Comparison, StoreTable, UpdateNotification },
   data() {
     return {
       isLoading: false
