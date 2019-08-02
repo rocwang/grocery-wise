@@ -101,24 +101,24 @@ module.exports = {
                   statuses: [0, 200]
                 }
               }
+            },
+            {
+              // To match cross-origin requests, use a RegExp that matches
+              // the start of the origin:
+              urlPattern: /\.(?:png|gif|jpg|jpeg|webp|svg)$/,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "images",
+                expiration: {
+                  purgeOnQuotaError: true,
+                  maxEntries: 1000,
+                  maxAgeSeconds: 31536000 // 1 year
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
             }
-            //             {
-            //               // To match cross-origin requests, use a RegExp that matches
-            //               // the start of the origin:
-            //               urlPattern: /\.(?:png|gif|jpg|jpeg|webp|svg)$/,
-            //               handler: "CacheFirst",
-            //               options: {
-            //                 cacheName: "images",
-            //                 expiration: {
-            //                   purgeOnQuotaError: true,
-            //                   maxEntries: 1000,
-            //                   maxAgeSeconds: 31536000 // 1 year
-            //                 },
-            //                 cacheableResponse: {
-            //                   statuses: [0, 200]
-            //                 }
-            //               }
-            //             }
           ]
         }
       ]);
