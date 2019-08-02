@@ -10,8 +10,8 @@ $.fn.extend({
   }
 });
 
-function stripImageTag(html) {
-  return html.replace(/<img .*?>/g, "");
+function replaceTagSrc(html) {
+  return html.replace(/\bsrc\b/g, "data-src");
 }
 
 export async function searchCountDown(query, key) {
@@ -23,7 +23,7 @@ export async function searchCountDown(query, key) {
       credentials: "include"
     }
   );
-  const html = stripImageTag(await response.text());
+  const html = replaceTagSrc(await response.text());
 
   return $(html)
     .find(".gridProductStamp")
@@ -38,7 +38,7 @@ export async function searchCountDown(query, key) {
           .trim(),
         image:
           process.env.VUE_APP_COUNTDOWN_IMAGE_BASE +
-          $item.find(".gridProductStamp-image").attr("src"),
+          $item.find(".gridProductStamp-image").attr("data-src"),
         price: Number($item.data("datalayer-price")),
         unit: $item.find(".trolleyControls").data("unit")
       };
@@ -53,7 +53,7 @@ export async function getCountdownStoreList() {
   let response = await fetch(`${process.env.VUE_APP_COUNTDOWN_PROXY}/`, {
     credentials: "include"
   });
-  const homepage = stripImageTag(await response.text());
+  const homepage = replaceTagSrc(await response.text());
   countdownCsrfToken = $(homepage)
     .find(
       '.select-delivery-method-form input[name="__RequestVerificationToken"]'
@@ -80,7 +80,7 @@ export async function getCountdownStoreList() {
       credentials: "include"
     }
   );
-  const addressPage = stripImageTag(await response.text());
+  const addressPage = replaceTagSrc(await response.text());
 
   return $(addressPage)
     .find(".manage-delivery-address-pickup-only")
@@ -134,7 +134,7 @@ async function searchFoodStuffs(brand, query, key) {
   const response = await fetch(url, {
     credentials: "include"
   });
-  const html = stripImageTag(await response.text());
+  const html = replaceTagSrc(await response.text());
 
   return $(html)
     .find(".fs-product-card")
