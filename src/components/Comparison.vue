@@ -33,7 +33,6 @@
 <script>
 import ComparisonRow from "./ComparisonRow";
 import { money } from "../filters";
-import { mapState } from "vuex";
 
 export default {
   name: "Comparison",
@@ -42,6 +41,10 @@ export default {
     shoppingList: {
       type: Array,
       default: () => []
+    },
+    storeIds: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -54,8 +57,7 @@ export default {
       return [0, 1, 2].map(storeIndex =>
         this.prices[storeIndex].reduce((sum, price) => sum + price, 0)
       );
-    },
-    ...mapState(["storeIds"])
+    }
   },
   methods: {
     handlePriceChange(productIndex, pricesByStore) {

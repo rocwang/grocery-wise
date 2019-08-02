@@ -1,12 +1,21 @@
 <template>
   <div id="app" :class="$style.root">
     <ShoppingList
-      @compare="setShoppingList"
       :class="$style.shoppingList"
       :isLoading="isLoading"
+      :initShoppingList="shoppingList"
+      @input="setShoppingList"
     />
-    <StoreTable :class="$style.storeTable" />
-    <Comparison :class="$style.comparison" :shoppingList="shoppingList" />
+    <StoreTable
+      :class="$style.storeTable"
+      :storeIds="storeIds"
+      @input="setStoreId"
+    />
+    <Comparison
+      :class="$style.comparison"
+      :shoppingList="shoppingList"
+      :storeIds="storeIds"
+    />
   </div>
 </template>
 
@@ -15,6 +24,7 @@ import StoreTable from "./components/StoreTable";
 import ShoppingList from "./components/ShoppingList";
 import Comparison from "./components/Comparison";
 import { mapState, mapMutations } from "vuex";
+import { SET_SHOPPING_LIST, SET_STORE_ID } from "./store";
 
 export default {
   name: "app",
@@ -25,10 +35,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["shoppingList"])
+    ...mapState(["shoppingList", "storeIds"])
   },
   methods: {
-    ...mapMutations(["setShoppingList"])
+    ...mapMutations({
+      setShoppingList: SET_SHOPPING_LIST,
+      setStoreId: SET_STORE_ID
+    })
   }
 };
 </script>

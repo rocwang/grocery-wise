@@ -1,7 +1,7 @@
 <template>
   <Multiselect
     v-bind="$attrs"
-    v-model="selected"
+    :value="selectedStore"
     @select="handleSelect"
     :options="stores"
     track-by="id"
@@ -18,12 +18,22 @@ export default {
   name: "StoreSelectCountdown",
   inheritAttrs: false,
   components: { Multiselect },
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
-      selected: null,
       stores: [],
       csrfToken: ""
     };
+  },
+  computed: {
+    selectedStore() {
+      return this.stores.find(({ id }) => id === this.value);
+    }
   },
   methods: {
     async handleSelect(selectedStore) {

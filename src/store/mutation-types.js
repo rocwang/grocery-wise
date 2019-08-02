@@ -1,0 +1,2 @@
+export const SET_SHOPPING_LIST = "SET_SHOPPING_LIST";
+export const SET_STORE_ID = "SET_STORE_ID";

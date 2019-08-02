@@ -5,18 +5,10 @@
     <textarea
       id="shopping_list"
       :placeholder="placeholder"
-      v-model="rawShoppingList"
       :class="$style.list"
+      v-model="rawShoppingList"
+      @input="input"
     ></textarea>
-
-    <button
-      type="button"
-      @click="compare"
-      :disabled="isCompareButtonDisabled"
-      :class="$style.button"
-    >
-      Compare!
-    </button>
   </form>
 </template>
 
@@ -27,14 +19,16 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    },
+    initShoppingList: {
+      type: Array,
+      required: true
     }
   },
   data() {
-    const placeholder = "apple\nbanana\norange\ncoke 1.5l\nweet-bix";
-
     return {
-      rawShoppingList: placeholder,
-      placeholder
+      rawShoppingList: this.initShoppingList.join("\n"),
+      placeholder: "apple\nbanana\norange\ncoke 1.5l\nweet-bix"
     };
   },
   computed: {
@@ -43,14 +37,11 @@ export default {
         .split("\n")
         .map(item => item.trim())
         .filter(item => item !== "");
-    },
-    isCompareButtonDisabled() {
-      return this.isLoading || this.shoppingList.length === 0;
     }
   },
   methods: {
-    compare() {
-      this.$emit("compare", this.shoppingList);
+    input() {
+      this.$emit("input", this.shoppingList);
     }
   }
 };
@@ -63,7 +54,8 @@ export default {
   height: 100vh;
   display: grid;
   grid-template:
-    "title" auto "list" 1fr "button" auto
+    "title" auto
+    "list" 1fr
     / 100%;
   grid-gap: 20px;
 }
@@ -80,17 +72,5 @@ export default {
   line-height: 1.5;
   background: lightyellow;
   font-size: 1.4rem;
-}
-
-.button {
-  grid-area: button;
-  padding: 10px;
-  background: black;
-  color: white;
-  font-size: 1.4rem;
-}
-
-.button:disabled {
-  background: lightgray;
 }
 </style>

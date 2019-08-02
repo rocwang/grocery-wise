@@ -1,7 +1,7 @@
 <template>
   <Multiselect
     v-bind="$attrs"
-    v-model="selected"
+    :value="selectedStore"
     @select="handleSelect"
     :options="stores"
     track-by="id"
@@ -22,11 +22,14 @@ export default {
       type: String,
       required: true,
       validator: value => ["newworld", "paknsave"].includes(value)
+    },
+    value: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
-      selected: null,
       stores: []
     };
   },
@@ -36,6 +39,9 @@ export default {
         newworld: process.env.VUE_APP_NEWWORLD_PROXY,
         paknsave: process.env.VUE_APP_PAKNSAVE_PROXY
       }[this.brand];
+    },
+    selectedStore() {
+      return this.stores.find(({ id }) => id === this.value);
     }
   },
   methods: {

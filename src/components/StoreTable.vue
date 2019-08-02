@@ -8,7 +8,8 @@
         <td :class="$style.store">
           <StoreSelectCountdown
             id="countdown"
-            @input="setStoreId({ key: 'countdown', value: $event })"
+            :value="storeIds.countdown"
+            @input="input('countdown', $event)"
           />
         </td>
       </tr>
@@ -19,7 +20,8 @@
         <td :class="$style.store">
           <StoreSelectFoodstuffs
             id="newworld"
-            @input="setStoreId({ key: 'newworld', value: $event })"
+            :value="storeIds.newworld"
+            @input="input('newworld', $event)"
             brand="newworld"
           />
         </td>
@@ -31,7 +33,8 @@
         <td :class="$style.store">
           <StoreSelectFoodstuffs
             id="paknsave"
-            @input="setStoreId({ key: 'paknsave', value: $event })"
+            :value="storeIds.paknsave"
+            @input="input('paknsave', $event)"
             brand="paknsave"
           />
         </td>
@@ -43,13 +46,20 @@
 <script>
 import StoreSelectCountdown from "./StoreSelectCountdown";
 import StoreSelectFoodstuffs from "./StoreSelectFoodstuffs";
-import { mapMutations } from "vuex";
 
 export default {
   name: "StoreTable",
   components: { StoreSelectCountdown, StoreSelectFoodstuffs },
+  props: {
+    storeIds: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
-    ...mapMutations(["setStoreId"])
+    input(key, value) {
+      this.$emit("input", { key, value });
+    }
   }
 };
 </script>
