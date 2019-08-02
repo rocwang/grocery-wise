@@ -4,7 +4,7 @@
 
 stages:
   - build
-  #- test
+  - test
   - staging
   - deploy
 
@@ -30,7 +30,7 @@ build:
     paths:
       - dist
 
-unit test:
+.unit test:
   image: node:12
   stage: test
   cache:
@@ -48,7 +48,7 @@ unit test:
     paths:
       - coverage
 
-e2e test:
+.e2e test:
   image: cypress/browsers:node12.6.0-chrome75
   stage: test
   cache:
