@@ -23,7 +23,7 @@ module.exports = {
     resolve: {
       extensions: [".js"],
       alias: {
-        jquery: "jquery/dist/jquery.slim.js"
+        "cash-dom": "cash-dom/dist/cash.esm.js"
       }
     }
   },

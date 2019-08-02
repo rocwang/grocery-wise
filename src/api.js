@@ -1,4 +1,14 @@
-import jquery from "jquery/dist/jquery.slim.js";
+import $ from "cash-dom";
+
+$.fn.extend({
+  toArray() {
+    const result = [];
+    this.each(function() {
+      result.push(this);
+    });
+    return result;
+  }
+});
 
 export async function searchCountDown(query, key) {
   const response = await fetch(
@@ -12,10 +22,10 @@ export async function searchCountDown(query, key) {
   const html = await response.text();
 
   const ownerDoc = document.implementation.createHTMLDocument("virtual");
-  return jquery(html, ownerDoc)
+  return $(html, ownerDoc)
     .find(".gridProductStamp")
     .map(function() {
-      const $item = jquery(this);
+      const $item = $(this);
 
       return {
         id: $item.data("datalayer-id"),
@@ -43,7 +53,7 @@ export async function getCountdownStoreList() {
     credentials: "include"
   });
   const homepage = await response.text();
-  countdownCsrfToken = jquery(homepage, ownerDoc)
+  countdownCsrfToken = $(homepage, ownerDoc)
     .find(
       '.select-delivery-method-form input[name="__RequestVerificationToken"]'
     )
@@ -71,12 +81,12 @@ export async function getCountdownStoreList() {
   );
   const addressPage = await response.text();
 
-  return jquery(addressPage, ownerDoc)
+  return $(addressPage, ownerDoc)
     .find(".manage-delivery-address-pickup-only")
     .first()
     .find("li")
     .map(function() {
-      const $li = jquery(this);
+      const $li = $(this);
       return {
         id: $li.children("input").val(),
         name: $li
@@ -126,10 +136,10 @@ async function searchFoodStuffs(brand, query, key) {
   const html = await response.text();
 
   const ownerDoc = document.implementation.createHTMLDocument("virtual");
-  return jquery(html, ownerDoc)
+  return $(html, ownerDoc)
     .find(".fs-product-card")
     .map(function() {
-      const $item = jquery(this);
+      const $item = $(this);
       const product = $item.find(".js-product-card-footer").data("options");
 
       return {
@@ -141,8 +151,8 @@ async function searchFoodStuffs(brand, query, key) {
           .trim(),
         image: $item
           .find(".fs-product-card__product-image")
-          .css("background-image")
-          .replace(/^url\("|"\)$/g, ""),
+          .prop("style")
+          ["background-image"].replace(/^url\("|"\)$/g, ""),
         price: Number(product.ProductDetails.PricePerItem),
         unit: product.ProductDetails.PriceMode
       };

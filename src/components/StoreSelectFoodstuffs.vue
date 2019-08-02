@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
+// use "src" to optimize bundle size:
+import Multiselect from "vue-multiselect/src/Multiselect";
 import { getFoodStuffsStoreList, setFoodStuffStore } from "../api";
 
 export default {
