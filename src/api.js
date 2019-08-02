@@ -10,6 +10,10 @@ $.fn.extend({
   }
 });
 
+function stripImageTag(html) {
+  return html.replace(/<img .*?>/g, "");
+}
+
 export async function searchCountDown(query, key) {
   const response = await fetch(
     `${
@@ -19,10 +23,9 @@ export async function searchCountDown(query, key) {
       credentials: "include"
     }
   );
-  const html = await response.text();
+  const html = stripImageTag(await response.text());
 
-  const ownerDoc = document.implementation.createHTMLDocument("virtual");
-  return $(html, ownerDoc)
+  return $(html)
     .find(".gridProductStamp")
     .map(function() {
       const $item = $(this);
@@ -46,14 +49,12 @@ export async function searchCountDown(query, key) {
 let countdownCsrfToken = "";
 
 export async function getCountdownStoreList() {
-  const ownerDoc = document.implementation.createHTMLDocument("virtual");
-
   // Get the CSRF token
   let response = await fetch(`${process.env.VUE_APP_COUNTDOWN_PROXY}/`, {
     credentials: "include"
   });
-  const homepage = await response.text();
-  countdownCsrfToken = $(homepage, ownerDoc)
+  const homepage = stripImageTag(await response.text());
+  countdownCsrfToken = $(homepage)
     .find(
       '.select-delivery-method-form input[name="__RequestVerificationToken"]'
     )
@@ -79,9 +80,9 @@ export async function getCountdownStoreList() {
       credentials: "include"
     }
   );
-  const addressPage = await response.text();
+  const addressPage = stripImageTag(await response.text());
 
-  return $(addressPage, ownerDoc)
+  return $(addressPage)
     .find(".manage-delivery-address-pickup-only")
     .first()
     .find("li")
@@ -133,10 +134,9 @@ async function searchFoodStuffs(brand, query, key) {
   const response = await fetch(url, {
     credentials: "include"
   });
-  const html = await response.text();
+  const html = stripImageTag(await response.text());
 
-  const ownerDoc = document.implementation.createHTMLDocument("virtual");
-  return $(html, ownerDoc)
+  return $(html)
     .find(".fs-product-card")
     .map(function() {
       const $item = $(this);
