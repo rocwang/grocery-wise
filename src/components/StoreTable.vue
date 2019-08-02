@@ -1,41 +1,17 @@
 <template>
   <table :class="$style.root">
     <tbody>
-      <tr>
+      <tr v-for="store in $options.stores" :key="store.key">
         <td :class="$style.brand">
-          <label for="countdown">Countdown</label>
+          <label :for="store.key">{{ store.name }}</label>
         </td>
         <td :class="$style.store">
-          <StoreSelectCountdown
-            id="countdown"
-            :value="storeIds.countdown"
-            @input="input('countdown', $event)"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td :class="$style.brand">
-          <label for="newworld">New World</label>
-        </td>
-        <td :class="$style.store">
-          <StoreSelectFoodstuffs
-            id="newworld"
-            :value="storeIds.newworld"
-            @input="input('newworld', $event)"
-            brand="newworld"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td :class="$style.brand">
-          <label for="paknsave">Pak'n Save</label>
-        </td>
-        <td :class="$style.store">
-          <StoreSelectFoodstuffs
-            id="paknsave"
-            :value="storeIds.paknsave"
-            @input="input('paknsave', $event)"
-            brand="paknsave"
+          <component
+            :is="store.component"
+            :id="store.key"
+            :value="storeIds[store.key]"
+            @input="input(store.key, $event)"
+            :brand="store.key"
           />
         </td>
       </tr>
@@ -50,6 +26,23 @@ import StoreSelectFoodstuffs from "./StoreSelectFoodstuffs";
 export default {
   name: "StoreTable",
   components: { StoreSelectCountdown, StoreSelectFoodstuffs },
+  stores: [
+    {
+      key: "countdown",
+      name: "Countdown",
+      component: StoreSelectCountdown
+    },
+    {
+      key: "newworld",
+      name: "New World",
+      component: StoreSelectFoodstuffs
+    },
+    {
+      key: "paknsave",
+      name: "Pak'n Save",
+      component: StoreSelectFoodstuffs
+    }
+  ],
   props: {
     storeIds: {
       type: Object,

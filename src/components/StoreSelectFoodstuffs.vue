@@ -12,6 +12,7 @@
 
 <script>
 import Multiselect from "vue-multiselect";
+import { getFoodStuffsStoreList, setFoodStuffStore } from "../api";
 
 export default {
   name: "StoreSelectFoodstuffs",
@@ -34,35 +35,20 @@ export default {
     };
   },
   computed: {
-    base() {
-      return {
-        newworld: process.env.VUE_APP_NEWWORLD_PROXY,
-        paknsave: process.env.VUE_APP_PAKNSAVE_PROXY
-      }[this.brand];
-    },
     selectedStore() {
       return this.stores.find(({ id }) => id === this.value);
     }
   },
   methods: {
     getCustomLabel: ({ name, address }) => `${name} - ${address}`,
-    async handleSelect(selectedStore) {
-      const response = await fetch(
-        `${this.base}/CommonApi/Store/ChangeStore?storeId=${selectedStore.id}`,
-        {
-          credentials: "include"
-        }
-      );
-      const json = await response.json();
-      this.selected = json.storeDetails;
-      this.$emit("input", this.selected.id);
+    async handleSelect({ id }) {
+      this.$emit("input", id);
+      const store = await setFoodStuffStore(this.brand, id);
+      this.$emit("input", store.id);
     }
   },
   async created() {
-    const api = `${this.base}/CommonApi/Store/GetStoreList`;
-    const response = await fetch(api);
-    const json = await response.json();
-    this.stores = json.stores;
+    this.stores = await getFoodStuffsStoreList(this.brand);
   }
 };
 </script>

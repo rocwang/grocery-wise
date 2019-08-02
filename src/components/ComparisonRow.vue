@@ -33,7 +33,7 @@
 <script>
 import ModalManualMatch from "./ModalManualMatch";
 import { money } from "../filters";
-import { searchNewWorld, searchCountDown, searchPakNSave } from "../search";
+import { searchNewWorld, searchCountDown, searchPakNSave } from "../api";
 
 export default {
   name: "ComparisonRow",
