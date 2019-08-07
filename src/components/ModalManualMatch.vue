@@ -23,7 +23,6 @@
 import Modal from "./Modal";
 import Spinner from "./Spinner";
 import { storeName } from "../filters";
-import { cloneDeep } from "lodash-es";
 
 export default {
   name: "ModalManualMatch",
@@ -44,7 +43,7 @@ export default {
   },
   data() {
     return {
-      newValue: cloneDeep(this.value)
+      newValue: [...this.value]
     };
   },
   methods: {
