@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { debounce } from "lodash-es";
+
 export default {
   name: "ShoppingList",
   props: {
@@ -27,22 +29,43 @@ export default {
   },
   data() {
     return {
-      rawShoppingList: this.initShoppingList.join("\n"),
+      rawShoppingList: this.initShoppingList
+        .map(({ name, quantity }) => `${name} × ${quantity}`)
+        .join("\n"),
       placeholder: "apple\nbanana\norange\ncoke 1.5l\nweet-bix"
     };
   },
   computed: {
     shoppingList() {
-      return this.rawShoppingList
-        .split("\n")
-        .map(item => item.trim())
-        .filter(item => item !== "");
+      return (
+        this.rawShoppingList
+          .split("\n")
+          .map(item => item.trim())
+          .filter(item => item !== "")
+          // Parse out the name and quantity then put them into a object
+          .map(item =>
+            Object.fromEntries(
+              item
+                .split(/(?:\s+[xX]|[*×])\s*/, 2)
+                .map((value, index) => [
+                  ["name", "quantity"][index],
+                  value.trim()
+                ])
+            )
+          )
+          // The quantity defaults to 1
+          .map(obj => ({ ...obj, quantity: parseInt(obj.quantity) || 1 }))
+      );
     }
   },
   methods: {
-    input() {
-      this.$emit("input", this.shoppingList);
-    }
+    input: debounce(
+      function() {
+        this.$emit("input", this.shoppingList);
+      },
+      500,
+      { trailing: true }
+    )
   }
 };
 </script>

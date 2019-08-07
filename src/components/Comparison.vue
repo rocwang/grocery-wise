@@ -11,18 +11,20 @@
     </thead>
     <tbody>
       <ComparisonRow
-        v-for="(query, index) in shoppingList"
-        :key="`${index}-${query}`"
-        :query="query"
-        @priceChange="handlePriceChange(index, $event)"
+        v-for="({ name, quantity }, index) in shoppingList"
+        :key="`${index}-${name}`"
+        :query="name"
+        :quantity="quantity"
         :storeIds="storeIds"
+        @lineTotalChange="handleLineTotalChange(index, $event)"
       />
     </tbody>
-    <tfoot>
+    <tfoot v-if="isFooterVisible">
       <tr>
         <td>Total</td>
         <td v-for="(total, index) in totals" :key="index">
-          {{ total | money }}
+          {{ total.value | money }}<br />
+          {{ total.saving }}
         </td>
         <td></td>
       </tr>
@@ -49,28 +51,43 @@ export default {
   },
   data() {
     return {
-      prices: [[], [], []]
+      lineTotals: []
     };
   },
   computed: {
     totals() {
-      return [0, 1, 2].map(storeIndex =>
-        this.prices[storeIndex].reduce((sum, price) => sum + price, 0)
-      );
+      return this.lineTotals
+        .reduce(
+          (totals, lineTotal) =>
+            totals.map((total, index) => total + lineTotal[index]),
+          [0, 0, 0]
+        )
+        .map((value, index, totals) => {
+          const max = Math.max(...totals);
+          return {
+            value,
+            saving:
+              value === max
+                ? "Most Expensive"
+                : `Saving ${money(max - value)}, ${(
+                    ((max - value) / max) *
+                    100
+                  ).toFixed(2)}%`
+          };
+        });
+    },
+    isFooterVisible() {
+      return this.totals.some(total => total.value > 0);
     }
   },
   methods: {
-    handlePriceChange(productIndex, pricesByStore) {
-      pricesByStore.forEach((price, storeIndex) => {
-        this.$set(this.prices[storeIndex], productIndex, price);
-      });
+    handleLineTotalChange(productIndex, lineTotalsByStore) {
+      this.$set(this.lineTotals, productIndex, lineTotalsByStore);
     }
   },
   watch: {
     shoppingList() {
-      this.prices = this.prices.map(pricesByStore =>
-        pricesByStore.slice(0, this.shoppingList.length)
-      );
+      this.lineTotals = this.lineTotals.slice(0, this.shoppingList.length);
     }
   },
   filters: { money }

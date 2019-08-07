@@ -12,6 +12,8 @@
         <p>
           {{ product.price | money }}
           {{ product.unit }}
+          ×
+          {{ quantity }}
         </p>
       </template>
     </td>
@@ -41,6 +43,10 @@ export default {
   props: {
     query: {
       type: String,
+      required: true
+    },
+    quantity: {
+      type: Number,
       required: true
     },
     storeIds: {
@@ -74,7 +80,7 @@ export default {
         this.stores[0].products[this.selected[0]] || { price: 0 },
         this.stores[1].products[this.selected[1]] || { price: 0 },
         this.stores[2].products[this.selected[2]] || { price: 0 }
-      ];
+      ].map(item => ({ ...item, lineTotal: item.price * this.quantity }));
     }
   },
   watch: {
@@ -140,10 +146,10 @@ export default {
     selectedProducts: {
       immediate: true,
       handler(selectedProducts) {
-        this.$emit("priceChange", [
-          selectedProducts[0].price,
-          selectedProducts[1].price,
-          selectedProducts[2].price
+        this.$emit("lineTotalChange", [
+          selectedProducts[0].lineTotal,
+          selectedProducts[1].lineTotal,
+          selectedProducts[2].lineTotal
         ]);
       }
     }
