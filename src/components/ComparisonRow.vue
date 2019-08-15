@@ -1,35 +1,47 @@
 <template>
-  <tr>
-    <td :class="$style.cell">{{ query }}</td>
-    <td
-      v-for="(product, key) in selectedProducts"
-      :key="key"
-      :class="$style.cell"
-    >
-      <template v-if="product.id">
-        <img :src="product.image" :alt="product.name" :class="$style.image" />
-        <p>{{ product.name }}</p>
-        <p>
-          {{ product.price | money }}
-          {{ product.unit }}
-          ×
-          {{ quantity }}
-        </p>
-      </template>
-    </td>
-    <td :class="$style.cell">
-      <button type="button" :class="$style.button" @click="isMatching = true">
-        Match Manually
-      </button>
-      <ModalManualMatch
-        v-if="isMatching"
-        :query="query"
-        :stores="stores"
-        v-model="selected"
-        @close="isMatching = false"
-      />
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td colspan="3" :class="[$style.queryCell, $style.cell]">
+        {{ query }}
+      </td>
+    </tr>
+    <tr>
+      <td
+        v-for="(product, key) in selectedProducts"
+        :key="key"
+        :class="$style.cell"
+      >
+        <template v-if="product.id">
+          <button
+            type="button"
+            :class="$style.button"
+            @click="isMatching = true"
+          >
+            <img
+              :src="product.image"
+              :alt="product.name"
+              :class="$style.image"
+            />
+            <span :class="$style.text">{{ product.name }}</span>
+            <span :class="$style.text">
+              {{ product.price | money }}
+              {{ product.unit }}
+              ×
+              {{ quantity }}
+            </span>
+          </button>
+
+          <ModalManualMatch
+            v-if="isMatching"
+            :query="query"
+            :stores="stores"
+            v-model="selected"
+            @close="isMatching = false"
+          />
+        </template>
+      </td>
+    </tr>
+  </tbody>
 </template>
 
 <script>
@@ -166,15 +178,23 @@ export default {
   line-height: 1.2;
 }
 
+.queryCell {
+  background-color: var(--c-gray-d);
+}
+
 .image {
   margin-left: auto;
   margin-right: auto;
 }
 
 .button {
-  padding: 10px;
-  background: black;
-  color: white;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 1.4rem;
+}
+
+.text {
+  display: block;
+  line-height: 1.5;
 }
 </style>

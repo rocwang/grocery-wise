@@ -2,31 +2,25 @@
   <table :class="$style.root">
     <thead>
       <tr>
-        <th>Name</th>
         <th>Countdown</th>
         <th>New World</th>
         <th>Pak'nSave</th>
-        <th>Action</th>
       </tr>
     </thead>
-    <tbody>
-      <ComparisonRow
-        v-for="({ name, quantity }, index) in shoppingList"
-        :key="`${index}-${name}`"
-        :query="name"
-        :quantity="quantity"
-        :storeIds="storeIds"
-        @lineTotalChange="handleLineTotalChange(index, $event)"
-      />
-    </tbody>
+    <ComparisonRow
+      v-for="({ name, quantity }, index) in shoppingList"
+      :key="`${index}-${name}`"
+      :query="name"
+      :quantity="quantity"
+      :storeIds="storeIds"
+      @lineTotalChange="handleLineTotalChange(index, $event)"
+    />
     <tfoot v-if="isFooterVisible">
       <tr>
-        <td>Total</td>
         <td v-for="(total, index) in totals" :key="index">
           {{ total.value | money }}<br />
           {{ total.saving }}
         </td>
-        <td></td>
       </tr>
     </tfoot>
   </table>
@@ -102,25 +96,17 @@ export default {
 .root thead th,
 .root tfoot td {
   font-weight: bold;
-  background: lightgray;
+  background-color: var(--c-gray-d);
   border: 1px solid #000;
   padding: 20px;
   text-align: center;
   line-height: 1.2;
 }
 
-.root th:nth-child(1) {
-  width: 11%;
-}
-
+.root th:nth-child(1),
 .root th:nth-child(2),
-.root th:nth-child(3),
-.root th:nth-child(4) {
-  width: 26%;
-}
-
-.root th:nth-child(5) {
-  width: 11%;
+.root th:nth-child(3) {
+  width: calc(100% / 3);
 }
 
 .root thead th {
