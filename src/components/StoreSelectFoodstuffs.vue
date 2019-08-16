@@ -7,7 +7,12 @@
     track-by="id"
     placeholder="Choose your store"
     label="label"
+    :class="$style.root"
   >
+    <template v-slot:placeholder>
+      <label :for="$attrs.id">Choose your store</label>
+    </template>
+
     <template v-slot:singleLabel="{ option }">
       <component :is="icon" :class="$style.icon" />
       <span :class="$style.label">{{ option.label }}</span>
@@ -101,5 +106,9 @@ export default {
   .label {
     font-size: 1.6rem;
   }
+}
+
+.root :global(.multiselect__placeholder) {
+  color: var(--c-gray-a);
 }
 </style>

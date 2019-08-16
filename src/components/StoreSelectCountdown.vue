@@ -7,7 +7,12 @@
     track-by="id"
     placeholder="Choose your store"
     label="name"
+    :class="$style.root"
   >
+    <template v-slot:placeholder>
+      <label :for="$attrs.id">Choose your store</label>
+    </template>
+
     <template v-slot:singleLabel="{ option }">
       <IconCountdown :class="$style.icon" />
       <span :class="$style.label">{{ option.name }}</span>
@@ -21,6 +26,7 @@
 </template>
 
 <script>
+// TODO: Merge this component into StoreSelectFoodstuffs.vue
 // use "src" to optimize bundle size:
 import Multiselect from "vue-multiselect/src/Multiselect";
 import IconCountdown from "./IconCountdown";
@@ -87,5 +93,9 @@ export default {
   .label {
     font-size: 1.6rem;
   }
+}
+
+.root :global(.multiselect__placeholder) {
+  color: var(--c-gray-a);
 }
 </style>
