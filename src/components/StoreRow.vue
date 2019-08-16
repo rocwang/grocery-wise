@@ -1,22 +1,15 @@
 <template>
-  <table :class="$style.root">
-    <tbody>
-      <tr v-for="store in $options.stores" :key="store.key">
-        <td :class="$style.brand">
-          <label :for="store.key">{{ store.name }}</label>
-        </td>
-        <td :class="$style.store">
-          <component
-            :is="store.component"
-            :id="store.key"
-            :value="storeIds[store.key]"
-            @input="input(store.key, $event)"
-            :brand="store.key"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <tr :class="$style.root">
+    <td :class="$style.cell" v-for="store in $options.stores" :key="store.key">
+      <component
+        :is="store.component"
+        :id="store.key"
+        :value="storeIds[store.key]"
+        @input="input(store.key, $event)"
+        :brand="store.key"
+      />
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -24,22 +17,19 @@ import StoreSelectCountdown from "./StoreSelectCountdown";
 import StoreSelectFoodstuffs from "./StoreSelectFoodstuffs";
 
 export default {
-  name: "StoreTable",
+  name: "StoreRow",
   components: { StoreSelectCountdown, StoreSelectFoodstuffs },
   stores: [
     {
       key: "countdown",
-      name: "Countdown",
       component: StoreSelectCountdown
     },
     {
       key: "newworld",
-      name: "New World",
       component: StoreSelectFoodstuffs
     },
     {
       key: "paknsave",
-      name: "Pak'n Save",
       component: StoreSelectFoodstuffs
     }
   ],
@@ -59,15 +49,23 @@ export default {
 
 <style module>
 .root {
-  table-layout: fixed;
 }
 
-.brand {
-  width: 100px;
+.cell {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  font-weight: bold;
+  background-color: var(--c-gray-d);
+  border: 1px solid #000;
+  padding: 20px;
   text-align: center;
+  line-height: 1.2;
 }
 
-.store {
-  width: calc(100% - 100px);
+.cell:nth-child(1),
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  width: calc(100% / 3);
 }
 </style>

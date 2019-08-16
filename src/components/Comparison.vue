@@ -1,11 +1,7 @@
 <template>
   <table :class="$style.root">
     <thead>
-      <tr>
-        <th>Countdown</th>
-        <th>New World</th>
-        <th>Pak'nSave</th>
-      </tr>
+      <slot />
     </thead>
     <ComparisonRow
       v-for="({ name, quantity }, index) in shoppingList"
@@ -16,7 +12,7 @@
       @lineTotalChange="handleLineTotalChange(index, $event)"
     />
     <tfoot v-if="isFooterVisible">
-      <tr>
+      <tr :class="$style.totalCell">
         <td v-for="(total, index) in totals" :key="index">
           {{ total.value | money }}<br />
           {{ total.saving }}
@@ -93,31 +89,15 @@ export default {
   table-layout: fixed;
 }
 
-.root thead th,
-.root tfoot td {
+.totalCell {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
   font-weight: bold;
   background-color: var(--c-gray-d);
   border: 1px solid #000;
   padding: 20px;
   text-align: center;
   line-height: 1.2;
-}
-
-.root th:nth-child(1),
-.root th:nth-child(2),
-.root th:nth-child(3) {
-  width: calc(100% / 3);
-}
-
-.root thead th {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.root tfoot td {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
 }
 </style>

@@ -7,21 +7,18 @@
       :initShoppingList="shoppingList"
       @input="setShoppingList"
     />
-    <StoreTable
-      :class="$style.storeTable"
-      :storeIds="storeIds"
-      @input="setStoreId"
-    />
     <Comparison
       :class="$style.comparison"
       :shoppingList="shoppingList"
       :storeIds="storeIds"
-    />
+    >
+      <StoreRow :storeIds="storeIds" @input="setStoreId" />
+    </Comparison>
   </div>
 </template>
 
 <script>
-import StoreTable from "./components/StoreTable";
+import StoreRow from "./components/StoreRow";
 import ShoppingList from "./components/ShoppingList";
 import Comparison from "./components/Comparison";
 import UpdateNotification from "./components/UpdateNotification";
@@ -30,7 +27,7 @@ import { SET_SHOPPING_LIST, SET_STORE_ID } from "./store";
 
 export default {
   name: "app",
-  components: { ShoppingList, Comparison, StoreTable, UpdateNotification },
+  components: { ShoppingList, Comparison, StoreRow, UpdateNotification },
   data() {
     return {
       isLoading: false
@@ -52,8 +49,7 @@ export default {
 .root {
   display: grid;
   grid-template:
-    "shoppingList storeTable" 150px
-    "shoppingList comparison" 1fr
+    "shoppingList comparison" auto
     / 300px 1fr;
   grid-gap: 20px;
   justify-items: stretch;
@@ -62,10 +58,6 @@ export default {
 
 .shoppingList {
   grid-area: shoppingList;
-}
-
-.storeTable {
-  grid-area: storeTable;
 }
 
 .comparison {

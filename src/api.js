@@ -1,4 +1,5 @@
 import $ from "cash-dom";
+import countdownStores from "./countdownStores";
 
 $.fn.extend({
   toArray() {
@@ -46,60 +47,77 @@ export async function searchCountDown(query, key) {
     .toArray();
 }
 
-let countdownCsrfToken = "";
+let countdownCsrfToken;
+export async function getCountdownCsrfToken() {
+  countdownCsrfToken =
+    countdownCsrfToken ||
+    (async () => {
+      // Get the CSRF token
+      let response = await fetch(`${process.env.VUE_APP_COUNTDOWN_PROXY}/`, {
+        credentials: "include"
+      });
+      const homepage = replaceTagSrc(await response.text());
 
-export async function getCountdownStoreList() {
-  // Get the CSRF token
-  let response = await fetch(`${process.env.VUE_APP_COUNTDOWN_PROXY}/`, {
-    credentials: "include"
-  });
-  const homepage = replaceTagSrc(await response.text());
-  countdownCsrfToken = $(homepage)
-    .find(
-      '.select-delivery-method-form input[name="__RequestVerificationToken"]'
-    )
-    .val();
+      return $(homepage)
+        .find(
+          '.select-delivery-method-form input[name="__RequestVerificationToken"]'
+        )
+        .val();
+    })();
 
-  // Set the delivery method to "pickup" in the current session
-  const formData = new FormData();
-  formData.set("deliveryMethod", "Pickup");
-  formData.set("__RequestVerificationToken", countdownCsrfToken);
-  response = await fetch(
-    `${process.env.VUE_APP_COUNTDOWN_PROXY}/shop/setdeliverymethod?_mode=ajax`,
-    {
-      method: "POST",
-      body: formData,
-      credentials: "include"
-    }
-  );
-
-  // Get the store list
-  response = await fetch(
-    `${process.env.VUE_APP_COUNTDOWN_PROXY}/shop/showaddresses`,
-    {
-      credentials: "include"
-    }
-  );
-  const addressPage = replaceTagSrc(await response.text());
-
-  return $(addressPage)
-    .find(".manage-delivery-address-pickup-only")
-    .first()
-    .find("li")
-    .map(function() {
-      const $li = $(this);
-      return {
-        id: $li.children("input").val(),
-        name: $li
-          .children("label")
-          .text()
-          .trim()
-      };
-    })
-    .toArray();
+  return countdownCsrfToken;
 }
 
+export async function getCountdownStoreList() {
+  return countdownStores;
+}
+
+/*
+  export async function getCountdownStoreList() {
+    const countdownCsrfToken = await getCountdownCsrfToken();
+
+    // Set the delivery method to "pickup" in the current session
+    const formData = new FormData();
+    formData.set("deliveryMethod", "Pickup");
+    formData.set("__RequestVerificationToken", countdownCsrfToken);
+    let response = await fetch(
+      `${process.env.VUE_APP_COUNTDOWN_PROXY}/shop/setdeliverymethod?_mode=ajax`,
+      {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      }
+    );
+
+    // Get the store list
+    response = await fetch(
+      `${process.env.VUE_APP_COUNTDOWN_PROXY}/shop/showaddresses`,
+      {
+        credentials: "include"
+      }
+    );
+    const addressPage = replaceTagSrc(await response.text());
+
+    return $(addressPage)
+      .find(".manage-delivery-address-pickup-only")
+      .first()
+      .find("li")
+      .map(function() {
+        const $li = $(this);
+        return {
+          id: $li.children("input").val(),
+          name: $li
+            .children("label")
+            .text()
+            .trim()
+        };
+      })
+      .toArray().sort((storeA, storeB) => storeA.Name.localeCompare(storeB));
+  }
+  */
+
 export async function setCountdownStore(storeId) {
+  const countdownCsrfToken = await getCountdownCsrfToken();
   const formData = new FormData();
   formData.set("addressID", storeId);
   formData.set("__RequestVerificationToken", countdownCsrfToken);
