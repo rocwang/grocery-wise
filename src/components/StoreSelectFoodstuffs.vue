@@ -10,12 +10,12 @@
   >
     <template v-slot:singleLabel="{ option }">
       <component :is="icon" :class="$style.icon" />
-      <span>{{ option.label }}</span>
+      <span :class="$style.label">{{ option.label }}</span>
     </template>
 
     <template v-slot:option="{ option }">
-      <component :is="icon" :class="$style.icon" />
-      <span>{{ option.label }}</span>
+      <component :is="icon" :class="[$style.icon, $style.optionIcon]" />
+      <span :class="$style.label">{{ option.label }}</span>
     </template>
   </Multiselect>
 </template>
@@ -73,11 +73,33 @@ export default {
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css" />
 <style module>
 .icon {
-  height: 20px;
-  display: inline-block;
-  margin-right: 5px;
+  height: 16px;
+  display: block;
+}
+
+.optionIcon {
+  display: none;
+}
+
+.label {
+  font-size: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .icon {
+    height: 20px;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .optionIcon {
+    display: inline-block;
+  }
+
+  .label {
+    font-size: 1.6rem;
+  }
 }
 </style>

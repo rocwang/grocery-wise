@@ -12,8 +12,12 @@
       @lineTotalChange="handleLineTotalChange(index, $event)"
     />
     <tfoot v-if="isFooterVisible">
-      <tr :class="$style.totalCell">
-        <td v-for="(total, index) in totals" :key="index">
+      <tr>
+        <td
+          v-for="(total, index) in totals"
+          :key="index"
+          :class="$style.totalCell"
+        >
           {{ total.value | money }}<br />
           {{ total.saving }}
         </td>
@@ -87,17 +91,32 @@ export default {
 <style module>
 .root {
   table-layout: fixed;
+  width: 100%;
+  --cell-padding: 5px;
+}
+
+@media (min-width: 1200px) {
+  .root {
+    --cell-padding: 15px;
+  }
 }
 
 .totalCell {
   position: sticky;
   bottom: 0;
   z-index: 10;
+  font-size: 1.2rem;
   font-weight: bold;
   background-color: var(--c-gray-d);
   border: 1px solid #000;
-  padding: 20px;
+  padding: var(--cell-padding);
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.5;
+}
+
+@media (min-width: 1200px) {
+  .totalCell {
+    font-size: 1.4rem;
+  }
 }
 </style>

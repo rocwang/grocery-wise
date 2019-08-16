@@ -72,24 +72,20 @@ export default {
 
 <style module>
 .root {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: grid;
-  grid-template:
-    "title" auto
-    "list" 1fr
-    / 100%;
-  grid-gap: 20px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .title {
-  grid-area: title;
+  flex: 0 0 auto;
   text-align: center;
+  padding-bottom: 15px;
 }
 
 .list {
-  grid-area: list;
+  flex: 1 1 auto;
   border: 1px solid black;
   padding: 10px;
   line-height: 1.5;

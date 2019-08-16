@@ -1,7 +1,7 @@
 <template>
-  <tbody>
+  <tbody :class="$style.root">
     <tr>
-      <td colspan="3" :class="[$style.queryCell, $style.cell]">
+      <td colspan="3" :class="$style.queryCell">
         {{ query }}
       </td>
     </tr>
@@ -10,37 +10,28 @@
         v-for="(product, key) in selectedProducts"
         :key="key"
         :class="$style.cell"
+        @click="isMatching = true"
       >
         <template v-if="product.id">
-          <button
-            type="button"
-            :class="$style.button"
-            @click="isMatching = true"
-          >
-            <img
-              :src="product.image"
-              :alt="product.name"
-              :class="$style.image"
-            />
-            <span :class="$style.text">{{ product.name }}</span>
-            <span :class="$style.text">
-              {{ product.price | money }}
-              {{ product.unit }}
-              ×
-              {{ quantity }}
-            </span>
-          </button>
-
-          <ModalManualMatch
-            v-if="isMatching"
-            :query="query"
-            :stores="stores"
-            v-model="selected"
-            @close="isMatching = false"
-          />
+          <img :src="product.image" :alt="product.name" :class="$style.image" />
+          <span :class="$style.text">{{ product.name }}</span>
+          <span :class="$style.text">
+            {{ product.price | money }}
+            {{ product.unit }}
+            ×
+            {{ quantity }}
+          </span>
         </template>
       </td>
     </tr>
+
+    <ModalManualMatch
+      v-if="isMatching"
+      :query="query"
+      :stores="stores"
+      v-model="selected"
+      @close="isMatching = false"
+    />
   </tbody>
 </template>
 
@@ -172,29 +163,36 @@ export default {
 
 <style module>
 .cell {
+  cursor: pointer;
   border: 1px solid #000;
-  padding: 20px;
+  padding: var(--cell-padding);
   text-align: center;
   line-height: 1.2;
 }
 
 .queryCell {
   background-color: var(--c-gray-d);
+  border: 1px solid #000;
+  padding: var(--cell-padding);
+  text-align: center;
+  line-height: 1.2;
 }
 
 .image {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.button {
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 1.4rem;
+  margin: 0 auto 15px;
+  max-width: 100%;
 }
 
 .text {
   display: block;
+  font-size: 1.2rem;
   line-height: 1.5;
+  white-space: normal;
+}
+
+@media (min-width: 1200px) {
+  .text {
+    font-size: 1.4rem;
+  }
 }
 </style>

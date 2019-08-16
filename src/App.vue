@@ -49,15 +49,33 @@ export default {
 .root {
   display: grid;
   grid-template:
-    "shoppingList comparison" auto
-    / 300px 1fr;
+    "shoppingList" auto
+    "comparison" auto
+    / 1fr;
   grid-gap: 20px;
   justify-items: stretch;
   align-items: stretch;
 }
 
+@media (min-width: 1200px) {
+  .root {
+    grid-template:
+      "shoppingList comparison" auto
+      / 300px 1fr;
+  }
+}
+
 .shoppingList {
   grid-area: shoppingList;
+  height: 50vh;
+}
+
+@media (min-width: 1200px) {
+  .shoppingList {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
 }
 
 .comparison {

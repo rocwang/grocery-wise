@@ -58,7 +58,7 @@ export default {
   font-weight: bold;
   background-color: var(--c-gray-d);
   border: 1px solid #000;
-  padding: 20px;
+  padding: var(--cell-padding);
   text-align: center;
   line-height: 1.2;
 }
