@@ -24,7 +24,7 @@
         <stop offset="100%" stop-color="#A8CF43" />
       </linearGradient>
       <linearGradient
-        :id="ids[3]"
+        :id="ids[2]"
         x1="49.997%"
         x2="49.997%"
         y1="-27.351%"
@@ -35,7 +35,7 @@
         <stop offset="100%" stop-color="#A8CF43" />
       </linearGradient>
       <linearGradient
-        :id="ids[4]"
+        :id="ids[3]"
         x1="50.017%"
         x2="50.017%"
         y1="-.8%"
@@ -47,7 +47,7 @@
         <stop offset="100%" stop-color="#A8CF43" />
       </linearGradient>
       <linearGradient
-        :id="ids[5]"
+        :id="ids[4]"
         x1="37.939%"
         x2="75.368%"
         y1="80.097%"
@@ -59,7 +59,7 @@
         <stop offset="100%" stop-color="#A8CF43" />
       </linearGradient>
       <linearGradient
-        :id="ids[6]"
+        :id="ids[5]"
         x1="-.929%"
         x2="88.117%"
         y1="84.979%"
@@ -106,7 +106,7 @@ export default {
   data() {
     const ids = new Array(6).fill(null).map(() => uniqueId(this.$options.name));
     return {
-      ids: ids,
+      ids,
       urlRefs: ids.map(id => `url(#${id})`)
     };
   }
