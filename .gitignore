@@ -4,7 +4,7 @@ node_modules
 /.netlify
 
 # The UI design
-/design.sketch
+/*ketch
 
 # The build folder
 /dist
