@@ -62,7 +62,7 @@ build:
   script:
     - npm run test:e2e -- --headless --browser chrome
 
-lighthouse:
+.lighthouse:
   image: cypress/browsers:node12.4.0-chrome76
   stage: staging
   cache:
