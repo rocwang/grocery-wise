@@ -49,7 +49,7 @@ build:
       - coverage
 
 .e2e test:
-  image: cypress/browsers:node12.6.0-chrome75
+  image: cypress/browsers:node12.4.0-chrome76
   stage: test
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -63,7 +63,7 @@ build:
     - npm run test:e2e -- --headless --browser chrome
 
 lighthouse:
-  image: cypress/browsers:node12.6.0-chrome75
+  image: cypress/browsers:node12.4.0-chrome76
   stage: staging
   cache:
     key: ${CI_COMMIT_REF_SLUG}
