@@ -1,6 +1,6 @@
 # Grocery Wise
 
-Grocery Wise is a web app to do grocery price comparison among Countdown, New 
+Grocery Wise is a web app to do grocery price comparison among Countdown, New
 World and Pak'nSave in New Zealand.
 
 ## Project setup
@@ -32,3 +32,13 @@ Remember to [set up EditorConfig for your preferred editor](https://editorconfig
 
 For local development, copy `.env.template` as `.env.local`
 and adjust the environment variable values there.
+
+# APIs to get store list
+
+* https://www.paknsaveonline.co.nz/CommonApi/Store/GetStoreList
+* https://www.ishopnewworld.co.nz/CommonApi/Store/GetStoreList
+* https://www.countdown.co.nz/api/stores/
+
+# Set up the API proxy server for CORS
+
+See `nginx.site.conf`
