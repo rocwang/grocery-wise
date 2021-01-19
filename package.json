@@ -1,7 +1,7 @@
 {
   "name": "grocery-wise",
   "version": "1.0.0",
-  "private": true,
+  "license": "MIT",
   "description": "Grocery Wise is a web app to do grocery price comparison among Countdown, New World and Pak'nSave in New Zealand.",
   "author": {
     "name": "Roc Wang",
